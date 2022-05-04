@@ -2,6 +2,8 @@ package com.lau.spring2022.exam_helper_assignment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         list = (ListView) findViewById(R.id.myList);
 
-        array_list = new ArrayList<String>(Arrays.asList());
+        array_list = new ArrayList<String>();
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, array_list);
         list.setAdapter(adapter);
@@ -35,5 +36,28 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        try{
+
+            SQLiteDatabase sql = this.openOrCreateDatabase("laudb", MODE_PRIVATE, null);
+            sql.execSQL("CREATE Table IF NOT EXISTS exams (exam_name VARCHAR primary key)");
+
+            //sql.execSQL("INSERT INTO exams(exam_name) VALUES ('Software Engineering')");
+
+            //sql.execSQL("DELETE FROM exams where exam_name  = 'Mobile Computing'");
+
+            Cursor c = sql.rawQuery("Select * from exams", null);
+            int exam_nameIndex = c.getColumnIndex("exam_name");
+            c.moveToFirst();
+
+            while(c!= null){
+                String name = c.getString(exam_nameIndex);
+                array_list.add(name);
+                c.moveToNext();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
