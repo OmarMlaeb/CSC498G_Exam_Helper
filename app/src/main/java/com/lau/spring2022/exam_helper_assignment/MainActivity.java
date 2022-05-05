@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView list;
-    ArrayList<String> array_list;
-    ArrayAdapter<String> adapter;
+    ListView list; // creating variables for the list view
+    ArrayList<String> array_list; // array list of type string
+    ArrayAdapter<String> adapter; // array adapter of type string
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
         array_list = new ArrayList<String>();
 
+        // connecting the adapter the array list
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, array_list);
-        list.setAdapter(adapter);
+        list.setAdapter(adapter); // setting the adapter the list view
 
+        // when an item is clicked in the list it will pass the url of the corresponding exam to the second activity to display it as a web view
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -51,28 +53,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
         try{
-
+            // creating a sql table of one attribute
             SQLiteDatabase sql = this.openOrCreateDatabase("laudb", MODE_PRIVATE, null);
             sql.execSQL("CREATE Table IF NOT EXISTS exams (exam_name VARCHAR primary key)");
+
+            // inserting the values to the table
 
             //sql.execSQL("INSERT INTO exams(exam_name) VALUES ('Mobile Computing')");
             //sql.execSQL("INSERT INTO exams(exam_name) VALUES ('Software Engineering')");
             //sql.execSQL("INSERT INTO exams(exam_name) VALUES ('Discrete II')");
             //sql.execSQL("INSERT INTO exams(exam_name) VALUES ('Database Management Systems')");
 
+            // inserting one value from the table
+
             //sql.execSQL("DELETE FROM exams where exam_name = 'Biology'");
 
+            // to read the columns that were returned from the query as well as to iterate over the rows of the result set
             Cursor c = sql.rawQuery("Select * from exams", null);
             int exam_nameIndex = c.getColumnIndex("exam_name");
             c.moveToFirst();
 
-            while(c!= null){
-                String name = c.getString(exam_nameIndex);
-                array_list.add(name);
+            while(c != null){
+                String name = c.getString(exam_nameIndex); // getting the exam name by index
+                array_list.add(name); // adding the values to the list from the database
                 c.moveToNext();
             }
 
-        }catch(Exception e){
+        } catch(Exception e){
             e.printStackTrace();
         }
     }

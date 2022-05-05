@@ -11,6 +11,8 @@ import android.webkit.WebViewClient;
 
 public class WebActivity extends AppCompatActivity {
 
+    WebView view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +23,15 @@ public class WebActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_web);
 
+        // to get the url sent from the main activity when clicked on an item in the list
         Intent intent = getIntent();
 
         String url = intent.getStringExtra("url");
 
-        WebView view = (WebView) findViewById(R.id.webview);
-        view.getSettings().setJavaScriptEnabled(true);
-        view.setWebViewClient( new WebViewClient());
-        view.loadUrl(url);
+        view = (WebView) findViewById(R.id.webview);
+
+        view.getSettings().setJavaScriptEnabled(true); // returns a WebSettings object that can be used to control the WebView's settings
+        view.setWebViewClient( new WebViewClient()); // sets the WebViewClient that will receive various notifications and requests
+        view.loadUrl(url); // load the url
     }
 }
